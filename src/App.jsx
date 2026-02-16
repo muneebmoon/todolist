@@ -105,6 +105,7 @@ function App() {
               <tr className="bg-gray-100 text-sm md:text-base">
                 <th className="border p-2">Tasks</th>
                 <th className="border p-2">Description</th>
+                <th className="border p-2">Status</th>
                 <th className="border p-2">Actions</th>
               </tr>
             </thead>
@@ -132,6 +133,13 @@ function App() {
                     >
                       {task.description}
                     </div>
+                  </td>
+                  <td className="border p-2">
+                    {task.completed ? (
+                      <span className="text-green-500 font-bold">Completed</span>
+                    ) : (
+                      <span className="text-red-500 font-bold">Pending</span>
+                    )}
                   </td>
 
                   <td className="border p-2">
