@@ -22,12 +22,6 @@ function App() {
   };
 
   function addNewTask(e) {
-    e.preventDefault();
-    if (newTask.trim() === '') {
-      alert('Please enter a task');
-      return;
-    }
-
     let updatedTasks;
 
     if (editIndex !== null) {
@@ -50,6 +44,8 @@ function App() {
     if (window.confirm('Are you sure you want to delete this task?')) {
       const updatedTasks = tasks.filter((task, i) => i !== index);
       saveTasks(updatedTasks);
+      setNewTask('');
+      setNewDescription('');
     }
   }
 
