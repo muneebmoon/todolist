@@ -3,7 +3,7 @@ import React from 'react'
 function Card({title, count, color}) {
     return (
         <>
-            <div className={`card-container w-100 p-10 flex flex-col items-center justify-center gap-10 rounded-lg ${color}`}>
+            <div className={`card-container w-80 p-10 flex flex-col items-center justify-center gap-10 rounded-lg ${color}`}>
                 <div className="title">
                     <h1 className="text-2xl font-bold">{title}</h1>
                 </div>
