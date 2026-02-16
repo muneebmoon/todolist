@@ -90,7 +90,7 @@ function App() {
           Add New Task
         </h1>
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg cursor-pointer transition"
+          className="bg-blue-500 hover:bg-blue-600 text-white w-100 px-6 py-2 rounded-lg cursor-pointer transition"
           onClick={() => setIsModalOpen(true)}
         >
           Add Task

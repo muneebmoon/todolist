@@ -35,14 +35,13 @@ function TaskModal({ newTask, setNewTask, addNewTask, closeModal, setNewDescript
           </button>
 
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
             onClick={addNewTask}
             disabled={!newTask.trim()}
           >
             {isEdit ? "Update" : "Add"}
           </button>
         </div>
-
       </div>
     </div>
   );
