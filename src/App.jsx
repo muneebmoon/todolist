@@ -100,7 +100,7 @@ function App() {
       {/* Table */}
       <div className="w-full px-4 md:px-10 py-6">
         <div className="overflow-x-auto">
-          <table className="w-full max-w-4xl mx-auto border-collapse border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
+          <table className="w-full mx-auto border-collapse border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
             <thead>
               <tr className="bg-gray-100 text-sm md:text-base">
                 <th className="border p-2">Tasks</th>

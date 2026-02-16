@@ -9,7 +9,7 @@ function TaskModal({ newTask, setNewTask, addNewTask, closeModal, setNewDescript
         <h2 className="text-xl font-bold mb-4">
           {isEdit ? "Edit Task" : "Add Task"}
         </h2>
-        <p className='text-red-500'>Task title is required</p>
+        <p className='text-red-500 mb-4'>Task title is required</p>
 
         <input
           type="text"
