@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Card from './components/Card';
+import TaskModal from './components/modals/TaskModal';
 
 function App() {
-  const [newTask, setNewTask] = useState('');
+  const [newTask, setNewTask] = useState("");
+  const [newDescription, setNewDescription] = useState("");
   const [tasks, setTasks] = useState([]);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
 
   useEffect(() => {
     const storedTasks = localStorage.getItem('tasks');
@@ -12,7 +15,6 @@ function App() {
       setTasks(JSON.parse(storedTasks));
     }
   }, []);
-
 
   const saveTasks = (updatedTasks) => {
     setTasks(updatedTasks);
@@ -25,24 +27,37 @@ function App() {
       alert('Please enter a task');
       return;
     }
-    const updatedTasks = [...tasks, { text: newTask, completed: false }];
+
+    let updatedTasks;
+
+    if (editIndex !== null) {
+      updatedTasks = tasks.map((task, i) =>
+        i === editIndex ? { ...task, title: newTask, description: newDescription } : task
+      );
+    } else {
+      updatedTasks = [...tasks, { title: newTask, description: newDescription, completed: false }];
+    }
     saveTasks(updatedTasks);
     setNewTask('');
+    setNewDescription('');
+    setEditIndex(null);
+    setIsModalOpen(false);
   }
 
+
   function deleteTask(index) {
-    const updatedTasks = tasks.filter((task, i) => i !== index);
-    saveTasks(updatedTasks);
+
+    if (window.confirm('Are you sure you want to delete this task?')) {
+      const updatedTasks = tasks.filter((task, i) => i !== index);
+      saveTasks(updatedTasks);
+    }
   }
 
   function editTask(index) {
-    const newTaskName = prompt('Enter the new task name:', tasks[index].text);
-    if (newTaskName && newTaskName.trim() !== '') {
-      const updatedTasks = tasks.map((task, i) =>
-        i === index ? { ...task, text: newTaskName } : task
-      );
-      saveTasks(updatedTasks);
-    }
+    setNewTask(tasks[index].title);
+    setNewDescription(tasks[index].description);
+    setEditIndex(index);
+    setIsModalOpen(true);
   }
 
   function handleComplete(index) {
@@ -55,83 +70,113 @@ function App() {
   const completedCount = tasks.filter(task => task.completed).length;
 
   return (
-    <div className="appContainer">
+    <div className="min-h-screen bg-gray-100">
+      {/* Heading */}
       <div className="heading">
-        <h1 className='text-6xl text-center p-10 bg-[#F2B50B]'>Todo App</h1>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center py-6 md:py-10  font-bold">
+          Todo App
+        </h1>
       </div>
 
-
-      <div className="cards flex items-center justify-center gap-10 p-10">
+      {/* Cards */}
+      <div className="cards flex flex-col md:flex-row items-center justify-center gap-6 p-6 md:p-10">
         <Card title="Total Tasks" count={tasks.length} color="bg-blue-500" />
         <Card title="Completed Tasks" count={completedCount} color="bg-green-500" />
       </div>
 
-
-      <div className="addNewField flex flex-col items-center justify-center gap-4 p-5">
-        <h1 className='text-2xl font-bold text-center'>Add New Task</h1>
-        <input
-          type="text"
-          className="border-2 border-gray-300 rounded-lg p-2 w-full max-w-md"
-          placeholder='Add new task'
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-        />
+      {/* Add Task Button */}
+      <div className="flex flex-col items-center justify-center gap-4 px-4">
+        <h1 className="text-xl md:text-2xl font-bold text-center">
+          Add New Task
+        </h1>
         <button
-          className='bg-blue-500 text-white px-4 py-2 rounded-lg ml-4 cursor-pointer'
-          onClick={addNewTask}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg cursor-pointer transition"
+          onClick={() => setIsModalOpen(true)}
         >
           Add Task
         </button>
       </div>
 
-
-      <div className="taskTable w-full max-w-2xl mx-auto p-5">
-        <table className="w-full border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border border-gray-300 p-2">Tasks</th>
-              <th className="border border-gray-300 p-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tasks.map((task, index) => (
-              <tr key={index} className="border-b border-gray-300">
-                <td
-                  className="border border-gray-300 p-2"
-                  style={{
-                    textDecoration: task.completed ? "line-through" : "none",
-                    color: task.completed ? "gray" : "black"
-                  }}
-                >
-                  {task.text}
-                </td>
-                <td className="border border-gray-300 p-2 text-center">
-                  <button
-                    className='bg-green-500 text-white px-2 py-1 rounded mr-2 cursor-pointer'
-                    onClick={() => handleComplete(index)}
-                  >
-                    {task.completed ? "Undo" : "Complete"}
-                  </button>
-                  <button
-                    className='bg-blue-500 text-white px-2 py-1 rounded mr-2 cursor-pointer'
-                    onClick={() => editTask(index)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className='bg-red-500 text-white px-2 py-1 rounded mr-2 cursor-pointer'
-                    onClick={() => deleteTask(index)}
-                  >
-                    Delete
-                  </button>
-                </td>
+      {/* Table */}
+      <div className="w-full px-4 md:px-10 py-6">
+        <div className="overflow-x-auto">
+          <table className="w-full max-w-4xl mx-auto border-collapse border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
+            <thead>
+              <tr className="bg-gray-100 text-sm md:text-base">
+                <th className="border p-2">Tasks</th>
+                <th className="border p-2">Description</th>
+                <th className="border p-2">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {tasks.map((task, index) => (
+                <tr key={index} className="border-b text-sm md:text-base text-center">
+                  <td
+                    className="border p-2"
+                    style={{
+                      textDecoration: task.completed ? "line-through" : "none",
+                      color: task.completed ? "gray" : "black"
+                    }}
+                  >
+                    {task.title}
+                  </td>
+                  <td className="border p-2 max-w-xs">
+                    <div
+                      className="truncate"
+                      style={{
+                        textDecoration: task.completed ? "line-through" : "none",
+                        color: task.completed ? "gray" : "black",
+                      }}
+                      title={task.description}
+                    >
+                      {task.description}
+                    </div>
+                  </td>
+
+                  <td className="border p-2">
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      <button
+                        className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded cursor-pointer"
+                        onClick={() => handleComplete(index)}
+                      >
+                        {task.completed ? "Undo" : "Complete"}
+                      </button>
+                      <button
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded cursor-pointer"
+                        onClick={() => editTask(index)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded cursor-pointer"
+                        onClick={() => deleteTask(index)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <TaskModal
+          newTask={newTask}
+          setNewTask={setNewTask}
+          addNewTask={addNewTask}
+          newDescription={newDescription}
+          setNewDescription={setNewDescription}
+          closeModal={() => setIsModalOpen(false)}
+          isEdit={editIndex !== null}
+        />
+      )}
     </div>
-  )
+  );
 }
 
 export default App;
