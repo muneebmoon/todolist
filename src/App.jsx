@@ -95,7 +95,6 @@ function App() {
 
 
       {/* Table */}
-
       {tasks.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-4 mt-10">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-500">
