@@ -93,81 +93,91 @@ function App() {
         </button>
       </div>
 
-      {/* Table */}
-      <div className="w-full px-4 md:px-10 py-6">
-        <div className="overflow-x-auto">
-          <table className="w-full mx-auto border-collapse border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
-            <thead>
-              <tr className="bg-gray-100 text-sm md:text-base">
-                <th className="border p-2">Tasks</th>
-                <th className="border p-2">Description</th>
-                <th className="border p-2">Status</th>
-                <th className="border p-2">Actions</th>
-              </tr>
-            </thead>
 
-            <tbody>
-              {tasks.map((task, index) => (
-                <tr key={index} className="border-b text-sm md:text-base text-center">
-                  <td
-                    className="border p-2"
-                    style={{
-                      textDecoration: task.completed ? "line-through" : "none",
-                      color: task.completed ? "gray" : "black"
-                    }}
-                  >
-                    {task.title}
-                  </td>
-                  <td className="border p-2 max-w-xs">
-                    <div
-                      className="truncate"
+      {/* Table */}
+
+      {tasks.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-4 mt-10">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-500">
+            No tasks added yet!
+          </h2>
+        </div>
+      ) : (
+        <div className="w-full px-4 md:px-10 py-6">
+          <div className="overflow-x-auto">
+            <table className="mx-auto border-collapse border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
+              <thead>
+                <tr className="bg-gray-100 text-sm md:text-base">
+                  <th className="border p-2">Tasks</th>
+                  <th className="border p-2">Description</th>
+                  <th className="border p-2">Status</th>
+                  <th className="border p-2">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {tasks.map((task, index) => (
+                  <tr key={index} className="border-b text-sm md:text-base text-center">
+                    <td
+                      className="border p-2"
                       style={{
                         textDecoration: task.completed ? "line-through" : "none",
-                        color: task.completed ? "gray" : "black",
+                        color: task.completed ? "gray" : "black"
                       }}
-                      title={task.description}
                     >
-                      {task.description}
-                    </div>
-                  </td>
-                  <td className="border p-2">
-                    {task.completed ? (
-                      <span className="text-green-500 font-bold">Completed</span>
-                    ) : (
-                      <span className="text-red-500 font-bold">Pending</span>
-                    )}
-                  </td>
+                      {task.title}
+                    </td>
+                    <td className="border p-2 max-w-xs">
+                      <div
+                        className="truncate"
+                        style={{
+                          textDecoration: task.completed ? "line-through" : "none",
+                          color: task.completed ? "gray" : "black",
+                        }}
+                        title={task.description}
+                      >
+                        {task.description}
+                      </div>
+                    </td>
+                    <td className="border p-2">
+                      {task.completed ? (
+                        <span className="text-green-500 font-bold">Completed</span>
+                      ) : (
+                        <span className="text-red-500 font-bold">Pending</span>
+                      )}
+                    </td>
 
-                  <td className="border p-2">
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      <button
-                        className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded cursor-pointer"
-                        onClick={() => handleComplete(index)}
-                      >
-                        {task.completed ? "Undo" : "Complete"}
-                      </button>
-                      <button
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded cursor-pointer"
-                        onClick={() => editTask(index)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded cursor-pointer"
-                        onClick={() => deleteTask(index)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    <td className="border p-2">
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        <button
+                          className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded cursor-pointer"
+                          onClick={() => handleComplete(index)}
+                        >
+                          {task.completed ? "Undo" : "Complete"}
+                        </button>
+                        <button
+                          className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded cursor-pointer"
+                          onClick={() => editTask(index)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded cursor-pointer"
+                          onClick={() => deleteTask(index)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
 
-      {/* Modal */}
+      )}
       {isModalOpen && (
         <TaskModal
           newTask={newTask}
